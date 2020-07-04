@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'de.mzte'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources"
+        }
+    }
+}
+
+mainClassName = 'de.mzte.multiutil.Main'
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    clean
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    archiveBaseName = 'MultiUtil'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
