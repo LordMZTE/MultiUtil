@@ -1,8 +1,8 @@
 package de.mzte.multiutil.module;
 
-import de.mzte.multiutil.util.ClassHelper;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -17,23 +17,18 @@ public class ModuleLoader {
     }
 
     private void init() {
-        try {
-            ClassHelper.getClasses(pkg, true).stream()
-                    .filter(c -> IModule.class.isAssignableFrom(c) &&
-                            c.isAnnotationPresent(LoadModule.class))
-                    .map(c -> {
-                        try {
-                            return (IModule) c.newInstance();
-                        } catch(InstantiationException | IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }).peek(m -> System.out.println("Loading Module " + m.getID()))
-                    .forEach(this::addModule);
-
-        } catch(ClassNotFoundException | IOException e) {
-            e.printStackTrace();
-        }
+        Reflections refs = new Reflections(pkg, new SubTypesScanner(false));
+        refs.getSubTypesOf(IModule.class).stream()
+                .filter(c -> c.isAnnotationPresent(LoadModule.class))
+                .map(c -> {
+                    try {
+                        return (IModule) c.newInstance();
+                    } catch(InstantiationException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }).peek(m -> System.out.println("Loading Module " + m.getID()))
+                .forEach(this::addModule);
     }
 
     public void addModule(IModule module) {
