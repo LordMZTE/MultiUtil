@@ -11,8 +11,6 @@ public class BottomPanel extends JPanel {
         JScrollPane outputScroll = new JScrollPane(outputPane);
         inputScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         outputScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        inputScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        outputScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         outputPane.setEditable(false);
         this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         this.add(inputScroll);
